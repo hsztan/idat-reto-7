@@ -1,5 +1,6 @@
 from pymongo import MongoClient
 
+
 class Connection:
     def __init__(self, database):
         self.client = MongoClient('mongodb://localhost:27017')
@@ -43,7 +44,8 @@ class Connection:
         result = collect.update_many(condition, {
             '$set': change
         })
-        print(f'Updated Document -> {result.raw_result} - Match {result.matched_count}')
+        print(
+            f'Updated Document -> {result.raw_result} - Match {result.matched_count}')
 
     def delete(self, collection, condition):
         collect = self.db[collection]
