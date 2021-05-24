@@ -4,8 +4,6 @@ from config.connection import Connection
 class Aescolar:
     def __init__(self, nombre):
         self.nombre = nombre
-        # self.insert_curso()
-        # self.create_table()
 
     @classmethod
     def all_aescolar(cls, data=[]):
@@ -55,27 +53,6 @@ class Nota:
         self.alumno = alumno
         self.curso = curso
         self.aescolar = aescolar
-
-        # self.insert_curso()
-        # self.create_table()
-
-    def create_table(self):
-        try:
-            conn = Connection("nota")
-            query = '''
-                CREATE TABLE IF NOT EXISTS nota(
-                    id SERIAL PRIMARY KEY NOT NULL,
-                    nota DOUBLE NOT NULL
-                    alumno_id INTEGER FOREIGN KEY
-                    curso_id INTEGER FOREIGN KEY
-                    aescolar_id INTEGER FOREIGN KEY
-                );
-            '''
-            conn.execute_query(query)
-            conn.commit()
-        except Exception as e:
-            conn.rollback()
-            print(e)
 
     @classmethod
     def all_nota(cls, data=[]):
@@ -132,23 +109,6 @@ class Curso:
     def __init__(self, nombre, profesor):
         self.nombre = nombre
         self.profesor = profesor
-        # self.insert_curso()
-        # self.create_table()
-
-    def create_table(self):
-        try:
-            conn = Connection("curso")
-            query = '''
-                CREATE TABLE IF NOT EXISTS mobile(
-                    id SERIAL PRIMARY KEY NOT NULL,
-                    nombre VARCHAR(50) NOT NULL
-                );
-            '''
-            conn.execute_query(query)
-            conn.commit()
-        except Exception as e:
-            conn.rollback()
-            print(e)
 
     @classmethod
     def all_curso(cls, data=[]):
@@ -201,26 +161,6 @@ class Profesor:
         self.dni = dni
         self.edad = edad
         self.correo = correo
-        # self.insert_curso()
-        # self.create_table()
-
-    def create_table(self):
-        try:
-            conn = Connection("profesor")
-            query = '''
-                CREATE TABLE IF NOT EXISTS profesor(
-                    id SERIAL PRIMARY KEY NOT NULL,
-                    nombre VARCHAR(50) NOT NULL,
-                    edad INTEGER NOT NULL,
-                    correo VARCHAR(50) NOT NULL,
-                    curso_id INTEGER FOREIGN KEY NOT NULL
-                );
-            '''
-            conn.execute_query(query)
-            conn.commit()
-        except Exception as e:
-            conn.rollback()
-            print(e)
 
     @classmethod
     def all_profesor(cls, data=[]):
@@ -277,24 +217,6 @@ class Salon:
     def __init__(self, nombre, aescolar):
         self.nombre = nombre
         self.aescolar = aescolar
-        # self.insert_curso()
-        # self.create_table()
-
-    def create_table(self):
-        try:
-            conn = Connection("salon")
-            query = '''
-                CREATE TABLE IF NOT EXISTS salon(
-                    id SERIAL PRIMARY KEY NOT NULL,
-                    nombre VARCHAR(50) NOT NULL,
-                    aescolar_id INTEGER FOREIGN KEY NOT NULL
-                );
-            '''
-            conn.execute_query(query)
-            conn.commit()
-        except Exception as e:
-            conn.rollback()
-            print(e)
 
     @classmethod
     def all_salon(cls, data=[]):
@@ -401,8 +323,6 @@ class Alumno:
         except Exception as e:
             print(e)
 
-
-class Curso_Salon:
     def __init__(self, salon_id, curso_id):
         self.salon_id = salon_id
         self.curso_id = curso_id
