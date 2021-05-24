@@ -7,31 +7,17 @@ class Aescolar:
         # self.insert_curso()
         # self.create_table()
 
-    def create_table(self):
-        try:
-            conn = Connection("aescolar")
-            query = '''
-                CREATE TABLE IF NOT EXISTS aescolar(
-                    id SERIAL PRIMARY KEY NOT NULL,
-                    nombre integer NOT NULL
-                );
-            '''
-            conn.execute_query(query)
-            conn.commit()
-        except Exception as e:
-            conn.rollback()
-            print(e)
-
     @classmethod
-    def all_aescolar(cls):
+    def all_aescolar(cls, data=[]):
         try:
-            conn = Connection('aescolar')
-            records = conn.select([])
+            conn = Connection('colegio')
+            records = list(conn.get_all('aescolar', {}, {
+                '_id': 0,
+                'nombre': 1,
+            }))
 
             for record in records:
-                print(f'ID: {record[0]}')
-                print(f'Año: {record[1]}')
-                # print(f'Precio: {record[2]}')
+                print(f'Año Escolar: {record["nombre"]}')
                 print('=====================')
             return records
         except Exception as e:
@@ -39,15 +25,12 @@ class Aescolar:
 
     def insert_aescolar(self):
         try:
-            conn = Connection('aescolar')
-            conn.insert({
-                'nombre': self.nombre
-                # 'precio': self.precio
+            conn = Connection('colegio')
+            conn.insert('aescolar', {
+                'nombre': self.nombre,
             })
             print(
-                f'Se registro el aescolar: {self.nombre}')
-            # print(
-            #     f'Se registro el modelo: {self.modelo} con el precio {self.precio}')
+                f'Se registro el año escolar: {self.nombre}')
         except Exception as e:
             print(e)
 
@@ -67,11 +50,11 @@ class Aescolar:
 
 
 class Nota:
-    def __init__(self, nota, alumno_id, curso_id, aescolar_id):
+    def __init__(self, nota, alumno, curso, aescolar):
         self.nota = nota
-        self.alumno_id = alumno_id
-        self.curso_id = curso_id
-        self.aescolar_id = aescolar_id
+        self.alumno = alumno
+        self.curso = curso
+        self.aescolar = aescolar
 
         # self.insert_curso()
         # self.create_table()
@@ -95,24 +78,22 @@ class Nota:
             print(e)
 
     @classmethod
-    def all_notas(cls):
+    def all_nota(cls, data=[]):
         try:
-            conn = Connection('nota')
-            query = '''
-                SELECT n.id, n.nota, a.nombre, c.nombre, ae.nombre FROM nota n 
-                JOIN alumno a ON n.alumno_id = a.id 
-                JOIN curso c ON n.curso_id = c.id
-                JOIN aescolar ae ON n.aescolar_id = ae.id
-            '''
-            records = conn.execute_my_query(query)
+            conn = Connection('colegio')
+            records = list(conn.get_all('nota', {}, {
+                '_id': 0,
+                'nota': 1,
+                'alumno': 1,
+                'curso': 1,
+                'aescolar': 1
+            }))
 
             for record in records:
-                print(f'ID: {record[0]}')
-                print(f'NOTA: {record[1]}')
-                print(f'ALUMNO: {record[2]}')
-                print(f'CURSO: {record[3]}')
-                print(f'AÑO ESCOLAR: {record[4]}')
-                # print(f'Precio: {record[2]}')
+                print(f'Nota: {record["nota"]}')
+                print(f'Alumno: {record["alumno"]}')
+                print(f'Curso: {record["curso"]}')
+                print(f'Año escolar: {record["aescolar"]}')
                 print('=====================')
             return records
         except Exception as e:
@@ -120,18 +101,15 @@ class Nota:
 
     def insert_nota(self):
         try:
-            conn = Connection('nota')
-            conn.insert({
+            conn = Connection('colegio')
+            conn.insert('nota', {
                 'nota': self.nota,
-                'alumno_id': self.alumno_id,
-                'curso_id': self.curso_id,
-                'aescolar_id': self.aescolar_id,
-                # 'precio': self.precio
+                'alumno': self.alumno,
+                'curso': self.curso,
+                'aescolar': self.aescolar
             })
             print(
-                f'Se registro la nota: {self.nota}')
-            # print(
-            #     f'Se registro el modelo: {self.modelo} con el precio {self.precio}')
+                f'Se registro la nota de : {self.alumno}')
         except Exception as e:
             print(e)
 
@@ -151,9 +129,9 @@ class Nota:
 
 
 class Curso:
-    def __init__(self, nombre, profesor_id):
+    def __init__(self, nombre, profesor):
         self.nombre = nombre
-        self.profesor_id = profesor_id
+        self.profesor = profesor
         # self.insert_curso()
         # self.create_table()
 
@@ -173,19 +151,18 @@ class Curso:
             print(e)
 
     @classmethod
-    def all_curso(cls):
+    def all_curso(cls, data=[]):
         try:
-            conn = Connection('curso')
-            query = '''
-                SELECT c.id, c.nombre, p.nombre FROM curso c
-                JOIN profesor p ON c.profesor_id = p.id
-            '''
-            records = conn.execute_my_query(query)
+            conn = Connection('colegio')
+            records = list(conn.get_all('curso', {}, {
+                '_id': 0,
+                'nombre': 1,
+                'profesor': 1
+            }))
 
             for record in records:
-                print(f'ID: {record[0]}')
-                print(f'Curso: {record[1]}')
-                print(f'Profesor: {record[2] }')
+                print(f'Curso: {record["nombre"]}')
+                print(f'Profesor: {record["profesor"]}')
                 print('=====================')
             return records
         except Exception as e:
@@ -193,16 +170,13 @@ class Curso:
 
     def insert_curso(self):
         try:
-            conn = Connection('curso')
-            conn.insert({
+            conn = Connection('colegio')
+            conn.insert('curso', {
                 'nombre': self.nombre,
-                'profesor_id': self.profesor_id
-                # 'precio': self.precio
+                'profesor': self.profesor
             })
             print(
                 f'Se registro el curso: {self.nombre}')
-            # print(
-            #     f'Se registro el modelo: {self.modelo} con el precio {self.precio}')
         except Exception as e:
             print(e)
 
@@ -251,19 +225,20 @@ class Profesor:
     @classmethod
     def all_profesor(cls, data=[]):
         try:
-            conn = Connection('profesor')
-            query = '''
-                SELECT p.id, p.nombre, p.dni, p.edad, p.correo FROM profesor p
-            '''
-            records = conn.execute_my_query(query)
+            conn = Connection('colegio')
+            records = list(conn.get_all('profesor', {}, {
+                '_id': 0,
+                'nombre': 1,
+                'dni': 1,
+                'edad': 1,
+                'correo': 1,
+            }))
 
             for record in records:
-                print(f'ID: {record[0]}')
-                print(f'Nombre: {record[1]}')
-                print(f'DNI: {record[2]}')
-                print(f'Edad: {record[3]}')
-                print(f'Correo: {record[4]}')
-                # print(f'Precio: {record[2]}')
+                print(f'Nombre: {record["nombre"]}')
+                print(f'DNI: {record["dni"]}')
+                print(f'Edad: {record["edad"]}')
+                print(f'Correo: {record["correo"]}')
                 print('=====================')
             return records
         except Exception as e:
@@ -271,18 +246,15 @@ class Profesor:
 
     def insert_profesor(self):
         try:
-            conn = Connection('profesor')
-            conn.insert({
+            conn = Connection('colegio')
+            conn.insert('profesor', {
                 'nombre': self.nombre,
                 'dni': self.dni,
                 'edad': self.edad,
                 'correo': self.correo,
-                # 'precio': self.precio
             })
             print(
                 f'Se registro el profesor: {self.nombre}')
-            # print(
-            #     f'Se registro el modelo: {self.modelo} con el precio {self.precio}')
         except Exception as e:
             print(e)
 
@@ -302,9 +274,9 @@ class Profesor:
 
 
 class Salon:
-    def __init__(self, nombre, aescolar_id):
+    def __init__(self, nombre, aescolar):
         self.nombre = nombre
-        self.aescolar_id = aescolar_id
+        self.aescolar = aescolar
         # self.insert_curso()
         # self.create_table()
 
@@ -327,17 +299,16 @@ class Salon:
     @classmethod
     def all_salon(cls, data=[]):
         try:
-            conn = Connection('salon')
-            query = '''
-                SELECT s.id, s.nombre, ae.nombre FROM salon s
-                JOIN aescolar ae ON s.aescolar_id = ae.id
-            '''
-            records = conn.execute_my_query(query)
+            conn = Connection('colegio')
+            records = list(conn.get_all('salon', {}, {
+                '_id': 0,
+                'nombre': 1,
+                'aescolar': 1
+            }))
 
             for record in records:
-                print(f'ID: {record[0]}')
-                print(f'Nombre: {record[1]}')
-                print(f'Año Escolar: {record[2]}')
+                print(f'Salon: {record["nombre"]}')
+                print(f'Año Escolar: {record["aescolar"]}')
                 print('=====================')
             return records
         except Exception as e:
@@ -345,16 +316,13 @@ class Salon:
 
     def insert_salon(self):
         try:
-            conn = Connection('salon')
-            conn.insert({
+            conn = Connection('colegio')
+            conn.insert('salon', {
                 'nombre': self.nombre,
-                'aescolar_id': self.aescolar_id
-                # 'precio': self.precio
+                'aescolar': self.aescolar
             })
             print(
                 f'Se registro el salon: {self.nombre}')
-            # print(
-            #     f'Se registro el modelo: {self.modelo} con el precio {self.precio}')
         except Exception as e:
             print(e)
 
@@ -374,48 +342,29 @@ class Salon:
 
 
 class Alumno:
-    def __init__(self, nombre, edad, correo, salon_id):
+    def __init__(self, nombre, edad, correo, salon):
         self.nombre = nombre
         self.edad = edad
         self.correo = correo
-        self.salon_id = salon_id
-        # self.insert_curso()
-        # self.create_table()
-
-    def create_table(self):
-        try:
-            conn = Connection("alumno")
-            query = '''
-                CREATE TABLE IF NOT EXISTS alumno(
-                    id SERIAL PRIMARY KEY NOT NULL,
-                    nombre VARCHAR(50) NOT NULL,
-                    edad INTEGER NOT NULL,
-                    correo VARCHAR(50) NOT NULL,
-                    salon_id INTEGER FOREIGN KEY NOT NULL
-                );
-            '''
-            conn.execute_query(query)
-            conn.commit()
-        except Exception as e:
-            conn.rollback()
-            print(e)
+        self.salon = salon
 
     @classmethod
     def all_alumno(cls, data=[]):
         try:
-            conn = Connection('alumno')
-            query = '''
-                SELECT a.id, a.nombre, a.edad, a.correo, s.nombre FROM alumno a
-                JOIN salon s ON a.salon_id = s.id
-            '''
-            records = conn.execute_my_query(query)
+            conn = Connection('colegio')
+            records = list(conn.get_all('alumno', {}, {
+                '_id': 0,
+                'nombre': 1,
+                'edad': 1,
+                'correo': 1,
+                'salon': 1
+            }))
 
             for record in records:
-                print(f'ID: {record[0]}')
-                print(f'Nombre: {record[1]}')
-                print(f'Edad: {record[2]}')
-                print(f'Correo: {record[3]}')
-                print(f'Salon: {record[4]}')
+                print(f'Nombre: {record["nombre"]}')
+                print(f'Edad: {record["edad"]}')
+                print(f'Correo: {record["correo"]}')
+                print(f'Salon: {record["salon"]}')
                 print('=====================')
             return records
         except Exception as e:
@@ -423,12 +372,12 @@ class Alumno:
 
     def insert_alumno(self):
         try:
-            conn = Connection('alumno')
-            conn.insert({
+            conn = Connection('colegio')
+            conn.insert('alumno', {
                 'nombre': self.nombre,
                 'edad': self.edad,
                 'correo': self.correo,
-                'salon_id': self.salon_id,
+                'salon': self.salon,
                 # 'precio': self.precio
             })
             print(
@@ -574,7 +523,7 @@ class Cole:
             ''')
             opcion = input('>')
             if (opcion == '1'):
-                Nota.all_notas()
+                Nota.all_nota()
             if (opcion == '2'):
                 self.ingresar_nota()
             if (opcion == '3'):
