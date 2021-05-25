@@ -6,10 +6,6 @@ class Connection:
         self.client = MongoClient('mongodb://localhost:27017')
         self.db = self.client[database]
 
-    # SELECT id, nombre FROM usuarios WHERE id = 1 AND rol_id > 1
-    # collection = usuarios
-    # condition => { id: { $eq: 1 }, rol_id: { $gt: 1 } }
-    # select => { id: 1, nombre: 1 }
     def get_all(self, collection, condition={}, select={}):
         collect = self.db[collection]
         return collect.find(condition, select)
@@ -18,15 +14,11 @@ class Connection:
         collect = self.db[collection]
         return collect.find_one(condition, select)
 
-    # collection = alumnos
-    # data => { nombre: 'Carlos', edad: 12, dni: 99999999 }
     def insert(self, collection, data):
         collect = self.db[collection]
         result = collect.insert_one(data)
         print(f'Insert ID -> {result.inserted_id}')
 
-    # collection = alumnos
-    # data => [{ nombre: 'Carlos', edad: 12, dni: 99999999 }, {....}]
     def insert_many(self, collection, data):
         collect = self.db[collection]
         result = collect.insert_many(data)
@@ -52,7 +44,6 @@ class Connection:
         collect.delete_one(condition)
         print(f'Delete Document')
 
-    # collection = alumnos
     def delete_many(self, collection, condition):
         collect = self.db[collection]
         result = collect.delete_many(condition)
